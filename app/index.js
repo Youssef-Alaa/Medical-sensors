@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const { ServerError } = require('../utils/util');
 
 const { userRouter } = require('./router/user.router');
+const { deviceRouter } = require('./router/device.router');
+const { dataRouter } = require('./router/data.router');
 
 const app = express();
 
@@ -28,6 +30,8 @@ mongoose
     });
 
     app.use('/users', userRouter);
+    app.use('/devices', deviceRouter);
+    app.use('/data', dataRouter);
 
     // 404 handler
     app.use('*', (req, res, next) => {

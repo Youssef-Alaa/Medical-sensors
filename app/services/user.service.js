@@ -1,13 +1,7 @@
 const _ = require('lodash');
-const User = require('../../models/user');
+const User = require('../../models/user.js');
 const { errorCodes } = require('../../config');
-
-const {
-  hashPassword,
-  signToken,
-  verifyPassword,
-  customAssign,
-} = require('../../utils/util');
+const {hashPassword,verifyPassword,signToken,customAssign} = require('../../utils/util.js')
 
 const getUserById = async id => {
   const user = await User.findById(id);
@@ -42,7 +36,7 @@ exports.registerUser = async ({ body }) => {
     let createdUser = await newUser.save();
     delete createdUser._doc.password;
     delete createdUser._doc.__v;
-    return { data: { createdUser }, message: 'user created successfully!' };
+    return { data: { createdUser }, message: 'User Created Successfully!' };
   } catch (error) {
     return { error, status: errorCodes.VALIDATION }
   }
@@ -62,6 +56,7 @@ exports.login = async ({ body }) => {
     user,
     token: signToken(user)
   }
+  
   return { data, message: 'successful login!' };
 };
 
@@ -70,16 +65,16 @@ exports.updateUser = async ({ user, body }) => {
     let updatedUser = await User.findOneAndUpdate({ _id: user._id }, body, { new: true });
     delete updatedUser._doc.password;
     delete updatedUser._doc.__v;
-    return { data: { updatedUser }, message: 'user updated successfully!' };
+    return { data: { updatedUser }, message: 'User Updated Successfully!' };
   } catch (error) {
     return { error, status: errorCodes.VALIDATION }
   }
 };
 
+
 exports.getUser = async ({ query }) => {
   const { _id, name, email } = query;
   const where = customAssign({}, { _id, name, email});
-
   let users = await User.find(where, '-__v -password');
   if(!users) return { error: 'no users found', status: errorCodes.NOT_FOUND };
   return { data: { users }, message: 'user(s) found!' };
