@@ -2,7 +2,8 @@ const {
   registerUser,
   login,
   updateUser,
-  getUser
+  getUser,
+  adminUpdateUser
 } = require('../services/user.service');
 
 const { controller } = require('../middleware/controller');
@@ -12,4 +13,5 @@ module.exports = {
   login: controller(login),
   updateUser: controller(updateUser),
   getUser: controller(getUser),
+  adminUpdateUser: controller(adminUpdateUser),
 };

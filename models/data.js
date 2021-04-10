@@ -1,38 +1,29 @@
 const mongoose = require('mongoose');
 const Strings = require('../config/strings');
-const validator = require('validator');
-const { isInteger } = require('lodash');
 
 const DataSchema = new mongoose.Schema({
-
-
   /* patientID: {
     Type: mongoose.types.ObjectId,
     required: true,
     length: 8,
   }, */
-  
-  warning: {
+  emergency: {
       type: Boolean,
       Default: false,
-
   },
- 
-  
   department: [{
     type: String,
-    enum: ["Surgeon", "Veterinarian","Neurologist","Pathologist","Psychiatrist","Therapist","Nurse", "Otorhinolaryngologist",
-    "Cardiologist","Pulmonologist","Pediatrician","Orthopedist ","Dentist","Gynaecologist","Ophthalmologist"],
+    enum: Object.values(Strings.departments),
   }],
-
   data: {
   type: mongoose.Schema.Types.Mixed,
+  },
+  patient: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
-}, 
-
-
-
+},
 { timestamps: true },
 );
 
-module.exports = mongoose.model('Data',DataSchema);
+module.exports = mongoose.model('Data', DataSchema);

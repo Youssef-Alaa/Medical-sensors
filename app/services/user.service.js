@@ -1,7 +1,12 @@
 const _ = require('lodash');
 const User = require('../../models/user.js');
 const { errorCodes } = require('../../config');
-const {hashPassword,verifyPassword,signToken,customAssign} = require('../../utils/util.js')
+const {
+  hashPassword,
+  signToken,
+  verifyPassword,
+  customAssign,
+} = require('../../utils/util');
 
 const getUserById = async id => {
   const user = await User.findById(id);
@@ -71,6 +76,19 @@ exports.updateUser = async ({ user, body }) => {
   }
 };
 
+exports.adminUpdateUser = async ({ user, body }) => {
+  if(user.role != "admin") return { error: "Not Authorized!", status: errorCodes.VALIDATION }
+  try {
+    let id = body.id;
+    delete body.id;
+    let updatedUser = await User.findOneAndUpdate({ _id: id }, body, { new: true });
+    delete updatedUser._doc.password;
+    delete updatedUser._doc.__v;
+    return { data: { updatedUser }, message: 'User Updated Successfully!' };
+  } catch (error) {
+    return { error, status: errorCodes.VALIDATION }
+  }
+};
 
 exports.getUser = async ({ query }) => {
   const { _id, name, email } = query;

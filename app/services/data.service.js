@@ -1,8 +1,7 @@
 const _ = require('lodash');
 const Data = require('../../models/data.js');
 const { errorCodes } = require('../../config');
-const {customAssign} = require('../../utils/util.js')
-
+const { customAssign } = require('../../utils/util.js');
 
 const getdataById = async id => {
   const data = await data.findById(id);
@@ -11,9 +10,7 @@ const getdataById = async id => {
 }
 exports.getdataById = getdataById;
 
-
 exports.registerData = async ({ body }) => {
- 
   const newData = new Data(body);
   try {
     let createdData = await newData.save();
@@ -24,11 +21,9 @@ exports.registerData = async ({ body }) => {
   }
 };
 
-
-
 exports.getData = async ({ query }) => {
-  const { patientID, department } = query;
-  const where = customAssign({}, { patientID, department});
+  const { patientID, department, emergency } = query;
+  const where = customAssign({}, { patientID, department, emergency });
 
   let data = await Data.find(where);
   if(!data) return { error: 'No Data Found', status: errorCodes.NOT_FOUND };

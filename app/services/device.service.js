@@ -1,9 +1,7 @@
 const _ = require('lodash');
 const Device = require('../../models/device.js');
 const { errorCodes } = require('../../config');
-const {customAssign} = require('../../utils/util.js')
-
-
+const { customAssign } = require('../../utils/util.js')
 
 const getDeviceById = async id => {
   const device = await Device.findById(id);
@@ -12,10 +10,8 @@ const getDeviceById = async id => {
 }
 exports.getDeviceById = getDeviceById;
 
-
-
-exports.registerDevice = async ({ body }) => {
-  
+exports.registerDevice = async ({ user, body }) => {
+  if(user.role != "admin") return { error: "Not Authorized!", status: errorCodes.VALIDATION };
   const newDevice = new Device(body);
   try {
     let createdDevice = await newDevice.save();
@@ -26,10 +22,10 @@ exports.registerDevice = async ({ body }) => {
   }
 };
 
-
-exports.updateDevice = async ({  body }) => {
+exports.updateDevice = async ({ user, body }) => {
+  if(user.role != "admin") return { error: "Not Authorized!", status: errorCodes.VALIDATION };
   try {
-    let id = body.id;
+    let id = body.deviceId;
     delete body.id;
     let updatedDevice = await Device.findOneAndUpdate({ _id: id }, body, { new: true });
     delete updatedDevice._doc.__v;
@@ -39,10 +35,9 @@ exports.updateDevice = async ({  body }) => {
   }
 };
 
-
 exports.getDevice = async ({ query }) => {
   const { _id, name, department } = query;
-  const where = customAssign({}, { _id, name, department});
+  const where = customAssign({}, { _id, name, department });
 
   let devices = await Device.find(where);
   if(!devices) return { error: 'No Devices Found', status: errorCodes.NOT_FOUND };

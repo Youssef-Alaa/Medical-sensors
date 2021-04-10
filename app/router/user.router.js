@@ -19,7 +19,8 @@ router.post('/', validate(registerUserSchema), registerUser);
 router.post('/login', validate(loginSchema), login);
 
 router.put('/', jwt(), validate(updateUserSchema), updateUser);
+router.put('/admin', jwt(), updateUser);
 
-router.get('/',  getUser);
+router.get('/', validate(getUserSchema), getUser);
 
 exports.userRouter = router;

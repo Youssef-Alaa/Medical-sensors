@@ -6,6 +6,6 @@ if (!envFound) {
 }
 
 module.exports = {
-  url: 'mongodb+srv://VforVendetta:0163875641@medical.5scsg.mongodb.net/Medical?retryWrites=true&w=majority',
-  secret: 'SECRET'
+  url: process.env.DB_URL,
+  secret: process.env.DB_SECRET
 };
